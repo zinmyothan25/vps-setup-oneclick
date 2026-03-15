@@ -12,7 +12,7 @@ cat << "EOF"
 EOF
 echo -e "\e[0m"
 
-echo "Hello! This is my setup script for Marzban."
+echo "Hello! This is my setup script for New VPS."
 echo "System update စတင်နေပါသည်..."
 
 # 1. System Update နှင့် လိုအပ်သော Tools များ သွင်းခြင်း
