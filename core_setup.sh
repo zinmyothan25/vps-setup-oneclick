@@ -17,7 +17,7 @@ EOF
 echo -e "\e[0m"
 echo "--------------------------------------------------"
 echo -e "\e[1;33m  Installing Protocols:\e[0m"
-echo "  🔹 VLESS (Reality & WS TLS)"
+echo "  🔹 VLESS (Reality)"
 echo "  🔹 VMess (WS TLS & TCP)"
 echo "  🔹 Trojan (TLS & TCP)"
 echo "  🔹 Shadowsocks"
@@ -65,23 +65,6 @@ cat <<EOF > /var/lib/marzban/xray_config.json
         "rules": [ { "type": "field", "ip": ["geoip:private"], "outboundTag": "BLOCK" } ]
     },
     "inbounds": [
-        {
-            "tag": "VLESS WS TLS",
-            "listen": "0.0.0.0",
-            "port": 2083,
-            "protocol": "vless",
-            "settings": { "clients": [], "decryption": "none" },
-            "streamSettings": {
-                "network": "ws", "security": "tls",
-                "tlsSettings": {
-                    "certificates": [{
-                        "certificateFile": "/var/lib/marzban/certs/$DOMAIN/fullchain.pem",
-                        "keyFile": "/var/lib/marzban/certs/$DOMAIN/privkey.pem"
-                    }]
-                },
-                "wsSettings": { "path": "/vless" }
-            }
-        },
         {
             "tag": "VLESS REALITY",
             "listen": "0.0.0.0",
@@ -132,15 +115,6 @@ cat <<EOF > /var/lib/marzban/xray_config.json
                     }]
                 }
             }
-        },
-        {
-            "tag": "VLESS TLS",
-            "listen": "0.0.0.0",
-            "port": 9850,
-            "protocol": "vless",
-            "settings": { "clients": [], "decryption": "none" },
-            "streamSettings": { "network": "tcp", "security": "none" },
-            "sniffing": { "enabled": true, "destOverride": ["http", "tls"] }
         },
         {
             "tag": "VMESS + TCP",
