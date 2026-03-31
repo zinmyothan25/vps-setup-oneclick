@@ -45,12 +45,6 @@ sudo ufw allow 9850/tcp      # VLESS TLS
 sudo ufw --force enable
 sudo ufw status
 
-# 4. Outline Server Install လုပ်ခြင်း
-echo "Outline Server စတင် Install လုပ်နေပါပြီ..."
-sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-apps/master/server_manager/install_scripts/install_server.sh)"
-
 # 5. နိဂုံးချုပ်
 echo "--------------------------------------------------------"
-echo "ရရှိလာသော installation output (အစိမ်းရောင်စာသားများ) ကို Outline Manager ထဲကို ကူးထည့်ပါ။"
-echo "သတိပြုရန်: အထက်ပါ Output တွင် ပြထားသော Management Port နှင့် Access Key Port များကို UFW တွင် ထပ်မံဖွင့်ပေးရန် လိုအပ်ပါမည်။"
-echo "ပြီးစီးပါပြီ!"
+echo "VPS Setup ပြီးစီးပါပြီ!"
