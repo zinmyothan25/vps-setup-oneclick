@@ -4,28 +4,18 @@
 clear
 
 # --- Banner Section ---
-echo -e "\e[1;34m"
-cat << "EOF"
-   
-EOF
-#!/bin/bash
-
-# Clear screen
-clear
-
-# --- Banner Section ---
 echo -e "\e[1;36m"
-echo "    ███████╗███╗   ███╗████████╗"
-echo "   ╚══███╔╝████╗ ████║╚══██╔══╝"
-echo "     ███╔╝ ██╔████╔██║   ██║        "
-echo "   ███╔╝  ██║╚██╔╝██║   ██║         "
-echo "   ███████╗██║ ╚═╝ ██║   ██║        "
-echo " ╚══════╝╚═╝     ╚═╝   ╚═╝            "
+echo "      ███████╗███╗   ███╗████████╗"
+echo "      ╚══███╔╝████╗ ████║╚══██╔══╝"
+echo "        ███╔╝ ██╔████╔██║   ██║   "
+echo "       ███╔╝  ██║╚██╔╝██║   ██║   "
+echo "      ███████╗██║ ╚═╝ ██║   ██║   "
+echo "      ╚══════╝╚═╝     ╚═╝   ╚═╝   "
 echo -e "\e[0m"
 echo "--------------------------------------------------"
 echo -e "\e[1;33m  Installing Protocols:\e[0m"
+echo "  🔹 VMess (WS TLS & TCP) - [Priority]"
 echo "  🔹 VLESS (Reality & WS TLS)"
-echo "  🔹 VMess (WS TLS & TCP)"
 echo "  🔹 Trojan (TLS & TCP)"
 echo "  🔹 Shadowsocks"
 echo "--------------------------------------------------"
@@ -64,7 +54,7 @@ fi
 
 echo -e "\e[1;32m✅ Keys Generated Successfully.\e[0m"
 
-# --- Create xray_config.json ---
+# --- Create xray_config.json (VMess protocols moved to top) ---
 cat <<EOF > /var/lib/marzban/xray_config.json
 {
     "log": { "loglevel": "warning" },
@@ -72,6 +62,32 @@ cat <<EOF > /var/lib/marzban/xray_config.json
         "rules": [ { "type": "field", "ip": ["geoip:private"], "outboundTag": "BLOCK" } ]
     },
     "inbounds": [
+        {
+            "tag": "VMess WS TLS",
+            "listen": "0.0.0.0",
+            "port": 8443,
+            "protocol": "vmess",
+            "settings": { "clients": [] },
+            "streamSettings": {
+                "network": "ws", "security": "tls",
+                "tlsSettings": {
+                    "certificates": [{
+                        "certificateFile": "/var/lib/marzban/certs/$DOMAIN/fullchain.pem",
+                        "keyFile": "/var/lib/marzban/certs/$DOMAIN/privkey.pem"
+                    }]
+                },
+                "wsSettings": { "path": "/vmess" }
+            }
+        },
+        {
+            "tag": "VMESS + TCP",
+            "listen": "0.0.0.0",
+            "port": 4427,
+            "protocol": "vmess",
+            "settings": { "clients": [] },
+            "streamSettings": { "network": "tcp", "security": "none" },
+            "sniffing": { "enabled": true, "destOverride": ["http", "tls"] }
+        },
         {
             "tag": "VLESS WS TLS",
             "listen": "0.0.0.0",
@@ -88,6 +104,15 @@ cat <<EOF > /var/lib/marzban/xray_config.json
                 },
                 "wsSettings": { "path": "/vless" }
             }
+        },
+        {
+            "tag": "VLESS TLS",
+            "listen": "0.0.0.0",
+            "port": 9850,
+            "protocol": "vless",
+            "settings": { "clients": [], "decryption": "none" },
+            "streamSettings": { "network": "tcp", "security": "none" },
+            "sniffing": { "enabled": true, "destOverride": ["http", "tls"] }
         },
         {
             "tag": "VLESS REALITY",
@@ -108,23 +133,6 @@ cat <<EOF > /var/lib/marzban/xray_config.json
             "sniffing": { "enabled": true, "destOverride": ["http", "tls"] }
         },
         {
-            "tag": "VMess WS TLS",
-            "listen": "0.0.0.0",
-            "port": 8443,
-            "protocol": "vmess",
-            "settings": { "clients": [] },
-            "streamSettings": {
-                "network": "ws", "security": "tls",
-                "tlsSettings": {
-                    "certificates": [{
-                        "certificateFile": "/var/lib/marzban/certs/$DOMAIN/fullchain.pem",
-                        "keyFile": "/var/lib/marzban/certs/$DOMAIN/privkey.pem"
-                    }]
-                },
-                "wsSettings": { "path": "/vmess" }
-            }
-        },
-        {
             "tag": "Trojan TLS",
             "listen": "0.0.0.0",
             "port": 2053,
@@ -139,24 +147,6 @@ cat <<EOF > /var/lib/marzban/xray_config.json
                     }]
                 }
             }
-        },
-        {
-            "tag": "VLESS TLS",
-            "listen": "0.0.0.0",
-            "port": 9850,
-            "protocol": "vless",
-            "settings": { "clients": [], "decryption": "none" },
-            "streamSettings": { "network": "tcp", "security": "none" },
-            "sniffing": { "enabled": true, "destOverride": ["http", "tls"] }
-        },
-        {
-            "tag": "VMESS + TCP",
-            "listen": "0.0.0.0",
-            "port": 4427,
-            "protocol": "vmess",
-            "settings": { "clients": [] },
-            "streamSettings": { "network": "tcp", "security": "none" },
-            "sniffing": { "enabled": true, "destOverride": ["http", "tls"] }
         },
         {
             "tag": "TROJAN + TCP",
@@ -189,5 +179,5 @@ marzban restart
 rm -rf /tmp/xray.zip /tmp/xray 2>/dev/null
 
 echo "--------------------------------------------------"
-echo -e "\e[1;32m🔥 Protocols Configuration Complete! 🔥\e[0m"
+echo -e "\e[1;32m🔥 Protocols Configuration Complete (ZMT Edition) 🔥\e[0m"
 echo "--------------------------------------------------"
